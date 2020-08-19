@@ -85,8 +85,7 @@ def property_bidding():  # имущественные торги
                 y = x.find("div", class_='count_lots').text
             q1 = [int(s) for s in y.split() if s.isdigit()]
             q2 = "".join([str(i) for i in q1])
-            print(type(q1))
-            return q2
+            return int(q2)
         else:
             y = 0
             return y
