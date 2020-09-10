@@ -72,8 +72,8 @@ def get_time_container(time):
     return 'По 44 всего: ' + torgi(get_html(r44)).__str__() + '\n' + 'По 223 всего: ' + torgi(get_html(r223)).__str__()+'\n'+ 'По имущественным: '
 
 def property_bidding():  # имущественные торги
-    r1 = 'https://www.etp-torgi.ru/market/?action=search&search_type=all&search_record_on_page=10&search_string=&procedure_stage=auction&price_from=&price_to=&currency=0&search_by_date_type=&$'
-    r2 = 'https://www.etp-torgi.ru/market/?action=search&search_type=all&search_record_on_page=10&search_string=&procedure_stage=wait_auction_begin&price_from=&price_to=&currency=0&search_by_$'
+    r1 = 'https://www.etp-torgi.ru/market/?action=search&search_type=all&search_record_on_page=10&search_string=&procedure_stage=auction&price_from=&price_to=&currency=0&search_by_date_type=date_auction_begin&search_date_start=11.09.2020&search_date_end=11.09.2020'
+    r2 = 'https://www.etp-torgi.ru/market/?action=search&search_type=all&search_record_on_page=10&search_string=&procedure_stage=wait_auction_begin&price_from=&price_to=&currency=0&search_by_date_type=date_auction_begin&search_date_start=11.09.2020&search_date_end=11.09.2020'
 
     def get_time_container(html):
         global w
@@ -85,6 +85,7 @@ def property_bidding():  # имущественные торги
                 y = x.find("div", class_='count_lots').text
             q1 = [int(s) for s in y.split() if s.isdigit()]
             q2 = "".join([str(i) for i in q1])
+            print(q2)
             return int(q2)
         else:
             y = 0
@@ -109,5 +110,3 @@ def get_text_messages(message):
         bot.send_message(message.from_user.id, "я тебя не понимаю. Напиши /help.")
 
 bot.polling(none_stop=True, interval=1)
-
-
