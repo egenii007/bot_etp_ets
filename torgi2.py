@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from requests.auth import HTTPBasicAuth
 import telebot
 import time
+import informations
 
 A = ['CAACAgIAAxkBAAICI14y80NZWdrZzfffM_cr9FUbKTZqAAJQCQACeVziCfUAATaxAAEx80gYBA',
      'CAACAgIAAxkBAAICJF4y86_hQEZnbvjmkxoFMEtoKKbkAAJKCQACeVziCWyGrjj1_IOoGAQ',
@@ -17,9 +18,9 @@ A = ['CAACAgIAAxkBAAICI14y80NZWdrZzfffM_cr9FUbKTZqAAJQCQACeVziCfUAATaxAAEx80gYBA
      'CAACAgIAAxkBAAICKF4y9BPzIqITIRSAbjZHgJH0lQgwAAJWCQACeVziCdI_3yy7G-XkGAQ',
      'CAACAgIAAxkBAAICNF4y9Fvjr21tLam0_3IbDbgKQ8spAAJVCQACeVziCa9amrleRn9xGAQ'
      ]
-bot = telebot.TeleBot('1011013862:AAG6egwuWdxE34eaXmsNN39xMcz0EeiI4A4')
+bot = informations.bot  #(тут нужно вставить токен бота)
 keyboard1 = telebot.types.ReplyKeyboardMarkup()
-keyboard1.row( 'Торги на данный момент', 'Запланированно на завтра', 'Оповестить об окончании торгов', 'Restart')
+keyboard1.row( 'Торги на данный момент', 'Запланированно на завтра')
 
 def tomorrow():
     tomorrow_date = (datetime.now() + timedelta(days=1)).strftime("%d.%m.%Y")
@@ -68,6 +69,8 @@ def torgi(html):
             return q2
 
 
+        
+
 def torgi44(time):
     r44 = 'https://www.etp-ets.ru/procedure/catalog/?&conditionalHoldingDateTime-from=' + time + '&conditionalHoldingDateTime-to=' + time + '&procedureStatusId[]=65&procedureStatusId[]=72&fullSearch=0&'
     return torgi(get_html(r44))
@@ -106,6 +109,7 @@ def end_torgi():
     return "Все торги на сегодня завершены."
 
 
+
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.send_message(message.chat.id, 'привет, ты написал мне /start', reply_markup=keyboard1)
@@ -127,3 +131,5 @@ def get_text_messages(message):
         bot.send_message(message.from_user.id, "я тебя не понимаю. Напиши /help.")
 
 bot.polling(none_stop=True, interval=1)
+
+

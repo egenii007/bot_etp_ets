@@ -55,25 +55,25 @@ def get_data(html):  # парсинг nagios
     XXX = "\n\nCRITICAL\n\n".join(Q[:-1])
     return XXX
 
+def torgi(html):
+    soup = BeautifulSoup(html, 'lxml')
+    body = soup.find_all('div', class_='input-group pull-right mte-grid-pageLimiter')
+    for day in body:
+        day1 = day.find('span', class_='input-group-addon')
+        for q in day1:
+            w = q.find("span")
+            q1 = [int(s) for s in q.split() if s.isdigit()]
+            q2 = "".join([str(i) for i in q1])
+            return q2
 
 def get_time_container(time):
     r44 = 'https://www.etp-ets.ru/procedure/catalog/?&conditionalHoldingDateTime-from=' + time + '&conditionalHoldingDateTime-to=' + time + '&procedureStatusId[]=65&procedureStatusId[]=72&fullSearch=0&'
     r223 = 'https://www.etp-ets.ru/223/catalog/procedure?&tradeStartDateTime-from=' + time + '&tradeStartDateTime-to=' + time + '&lotStatusId[]=31&lotStatusId[]=33&'
-    def torgi(html):
-        soup = BeautifulSoup(html, 'lxml')
-        body = soup.find_all('div', class_='input-group pull-right mte-grid-pageLimiter')
-        for day in body:
-            day1 = day.find('span', class_='input-group-addon')
-            for q in day1:
-                w = q.find("span")
-                q1 = [int(s) for s in q.split() if s.isdigit()]
-                q2 = "".join([str(i) for i in q1])
-                return q2
     return 'По 44 всего: ' + torgi(get_html(r44)).__str__() + '\n' + 'По 223 всего: ' + torgi(get_html(r223)).__str__()+'\n'+ 'По имущественным: '
 
-def property_bidding():  # имущественные торги
-    r1 = 'https://www.etp-torgi.ru/market/?action=search&search_type=all&search_record_on_page=10&search_string=&procedure_stage=auction&price_from=&price_to=&currency=0&search_by_date_type=date_auction_begin&search_date_start=11.09.2020&search_date_end=11.09.2020'
-    r2 = 'https://www.etp-torgi.ru/market/?action=search&search_type=all&search_record_on_page=10&search_string=&procedure_stage=wait_auction_begin&price_from=&price_to=&currency=0&search_by_date_type=date_auction_begin&search_date_start=11.09.2020&search_date_end=11.09.2020'
+def property_bidding(time):  # имущественные торги
+    r1 = 'https://www.etp-torgi.ru/market/?action=search&search_type=all&search_record_on_page=10&search_string=&procedure_stage=auction&price_from=&price_to=&currency=0&search_by_date_type=date_auction_begin&search_date_start='+ time + '&search_date_end=' + time
+    r2 = 'https://www.etp-torgi.ru/market/?action=search&search_type=all&search_record_on_page=10&search_string=&procedure_stage=wait_auction_begin&price_from=&price_to=&currency=0&search_by_date_type=date_auction_begin&search_date_start='+time+'&search_date_end='+time
 
     def get_time_container(html):
         global w
@@ -94,6 +94,36 @@ def property_bidding():  # имущественные торги
     return (get_time_container(get_html(r1))) + (get_time_container(get_html(r2)))
 #    return 'Идут торги: ' + (get_time_container(get_html(r1))) + '\n' + 'Ожидаются:' + (get_time_container(get_html(r2)))
 
+
+def end_torgi(f1,f2):
+   if f1+f2 == 0:
+       return "Торги на сегодня завершены"
+
+# def end():  # зацикливание(мб так и надо, нужно ограничить до одного верного вхождения) #поменять местами
+#     global a, r
+#     y = get_status_torgi(get_html_torgi())
+#     while y != "Активные торги : 0":
+#         print("QWERTY")
+#         get_status_torgi(get_html_torgi())
+#         y = ""
+#         y += get_status_torgi(get_html_torgi())
+#     # return print(y)
+#     return bot.send_message(chat_id=545569185, text="Все торги на сегодня завершены.") and bot.send_message(chat_id=261171257, text="Все торги на сегодня завершены.")
+#
+# def replay():
+#     now = datetime.datetime.now()
+#     print(now)
+#     today13am = now.replace(hour=00, minute=8, second=0, microsecond=0)
+#     bedtime = now.replace(hour=23, minute=50, second=0, microsecond=0)
+#     if today13am < now < bedtime:
+#         end()
+#
+# schedule.every().day.at("15:34").do(replay)
+# while True:
+#     schedule.run_pending()
+#     time.sleep(10)
+
+
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.send_message(message.chat.id, 'привет, ты написал мне /start', reply_markup=keyboard1)
@@ -103,9 +133,9 @@ def get_text_messages(message):
     if message.text.lower() == 'отчет из nagios':
         bot.send_message(message.from_user.id, get_data(get_html("http://nagios-m1.etp-micex.ru/nagios/cgi-bin/status.cgi?host=all&servicestatustypes=16&sorttype=1&sortoption=6")))
     elif message.text.lower() == 'торги на данный момент':
-        bot.send_message(message.from_user.id, get_time_container(now())+property_bidding().__str__())
+        bot.send_message(message.from_user.id, get_time_container(now())+property_bidding(now()).__str__())
     elif message.text.lower() == 'запланированно на завтра':
-        bot.send_message(message.from_user.id, get_time_container(tomorrow())+property_bidding().__str__())
+        bot.send_message(message.from_user.id, get_time_container(tomorrow())+property_bidding(tomorrow()).__str__())
     else:
         bot.send_message(message.from_user.id, "я тебя не понимаю. Напиши /help.")
 
