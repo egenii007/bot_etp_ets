@@ -69,7 +69,7 @@ def torgi(html):
             return q2
 
 
-        
+
 
 def torgi44(time):
     r44 = 'https://www.etp-ets.ru/procedure/catalog/?&conditionalHoldingDateTime-from=' + time + '&conditionalHoldingDateTime-to=' + time + '&procedureStatusId[]=65&procedureStatusId[]=72&fullSearch=0&'
