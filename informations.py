@@ -13,7 +13,7 @@ A = ['CAACAgIAAxkBAAICI14y80NZWdrZzfffM_cr9FUbKTZqAAJQCQACeVziCfUAATaxAAEx80gYBA
      'CAACAgIAAxkBAAICNF4y9Fvjr21tLam0_3IbDbgKQ8spAAJVCQACeVziCa9amrleRn9xGAQ'
      ]
 
-bot = telebot.TeleBot('1011013862:AAG6egwuWdxE34eaXmsNN39xMcz0EeiI4A4')
+bot = telebot.TeleBot('')
 
 
 
